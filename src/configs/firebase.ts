@@ -1,5 +1,6 @@
 import {initializeApp} from "firebase/app";
-import {getAuth} from "firebase/auth";
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
+import {AUTH_ERROR_CODES} from "./auth-error-code";
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -12,3 +13,18 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const authService = getAuth();
+
+export const signIn = async (email: string, password: string) => {
+    let success:boolean = true;
+    try {
+        const userCredential = await signInWithEmailAndPassword(authService, email, password);
+        return success;
+
+    } catch ({message, code}) {
+
+        switch (code) {
+            case AUTH_ERROR_CODES.USER_DELETED:
+                return success = false;
+        }
+    }
+};

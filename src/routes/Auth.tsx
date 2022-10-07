@@ -49,7 +49,12 @@ function Auth() {
                 <ContentsText fontSize={"34px"}>오늘 트위터에 가입하세요.</ContentsText>
                 <SocialWrapper>
                     <SocialBtn
-                        state={{background: location}}
+                        state={{
+                            background: {
+                                location,
+                                isSignUp: true
+                            }
+                        }}
                         to={`${AUTH_MODAL}`}
                         mgtop={"0px"}
                         bg={"white"}
@@ -72,14 +77,19 @@ function Auth() {
                         <span>Apple에서 가입하기</span>
                     </SocialBtn>
                     <SocialBtn
-                        state={{background: location}}
+                        state={{
+                            background: {
+                                location,
+                                isSignUp: true
+                            }
+                        }}
                         to={`${AUTH_MODAL}`}
                         bg={"rgb(29, 155, 240)"}
                         fcolor={"white"}
                         fsize={"16px"}
                         fweight={700}
                         mgtop={"15px"}
-                        >
+                    >
                         <span>휴대폰 번호나 이메일 주소로 가입하기</span>
                     </SocialBtn>
                     <SignInInfoText>
@@ -95,7 +105,12 @@ function Auth() {
                 <TwitterWrapper>
                     <ContentsText fontSize={"17px"}>이미 트위터에 가입하셨나요?</ContentsText>
                     <SocialBtn
-                        state={{background: location}}
+                        state={{
+                            background: {
+                                location,
+                                isSignUp: false
+                            }
+                        }}
                         to={`${AUTH_MODAL}`}
                         bg={"black"}
                         fcolor={"rgb(29, 155, 240)"}
