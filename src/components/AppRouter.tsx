@@ -11,7 +11,7 @@ function AppRouter() {
     const location = useLocation();
     const isSignedIn = useRecoilValue(authState);
     const background = location.state && location.state.background;
-    console.log(background, background?.location, background?.isSignUp);
+
     return (
         <>
             <Routes location={background?.location || location}>

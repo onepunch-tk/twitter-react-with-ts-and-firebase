@@ -13,7 +13,7 @@ import {
     TwitterWrapper
 } from 'styleds/authStyled';
 import {AUTH_MODAL} from "constans/routers";
-import {Outlet, useLocation} from "react-router-dom";
+import {Link, Outlet, useLocation} from "react-router-dom";
 
 const navList = [
     "소개",
@@ -49,6 +49,7 @@ function Auth() {
                 <ContentsText fontSize={"34px"}>오늘 트위터에 가입하세요.</ContentsText>
                 <SocialWrapper>
                     <SocialBtn
+                        as={Link}
                         state={{
                             background: {
                                 location,
@@ -65,6 +66,7 @@ function Auth() {
                         <span>Google 계정으로 가입하기</span>
                     </SocialBtn>
                     <SocialBtn
+                        as={Link}
                         state={{background: location}}
                         to={`${AUTH_MODAL}`}
                         mgtop={"15px"}
@@ -77,6 +79,7 @@ function Auth() {
                         <span>Apple에서 가입하기</span>
                     </SocialBtn>
                     <SocialBtn
+                        as={Link}
                         state={{
                             background: {
                                 location,
@@ -105,6 +108,7 @@ function Auth() {
                 <TwitterWrapper>
                     <ContentsText fontSize={"17px"}>이미 트위터에 가입하셨나요?</ContentsText>
                     <SocialBtn
+                        as={Link}
                         state={{
                             background: {
                                 location,

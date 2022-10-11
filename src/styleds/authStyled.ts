@@ -16,7 +16,7 @@ export const LoginMain = styled.main`
   grid-template-columns: minmax(min-content, 1.2fr) minmax(30%, 1fr);
   grid-template-rows: minmax(min-content, 100vh) 6vh;
   background-color: black;
-  
+
   @media screen and (max-width: 390px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 0.4fr 120px;
@@ -59,7 +59,7 @@ export const SocialWrapper = styled(ColBox)`
   margin-top: 40px;
 `;
 
-export const SocialBtn = styled(Link)<SignInBtn>`
+export const SocialBtn = styled.button<SignInBtn>`
   background-color: ${props => props.bg};
   color: ${props => props.fcolor};
   font-size: ${props => props.fsize};
@@ -117,7 +117,7 @@ export const Footer = styled.footer`
   display: flex;
   justify-content: center;
   align-items: center;
-  
+
   ul {
     display: flex;
     justify-content: center;
@@ -130,11 +130,11 @@ export const Footer = styled.footer`
     li {
       cursor: pointer;
     }
-    
+
     li:not(last-child) {
       margin-right: 15px;
     }
-    
+
     li:hover {
       text-decoration: underline;
     }
@@ -142,8 +142,10 @@ export const Footer = styled.footer`
 
   @media screen and (max-width: 390px) {
     grid-row: 3;
+
     ul {
       width: 90%;
+
       li:not(last-child) {
         margin-bottom: 10px;
       }
