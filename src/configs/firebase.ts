@@ -12,10 +12,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const authService = getAuth();
+export const authService = getAuth(app);
 
 export const signIn = async (email: string, password: string) => {
-    let success:boolean = true;
+    let success: boolean = true;
     try {
         const userCredential = await signInWithEmailAndPassword(authService, email, password);
         return success;
@@ -26,5 +26,13 @@ export const signIn = async (email: string, password: string) => {
             case AUTH_ERROR_CODES.USER_DELETED:
                 return success = false;
         }
+    }
+};
+
+export const signUp = async (email: string, password: string) => {
+    try {
+        await createUserWithEmailAndPassword(authService, email, password)
+    } catch ({message, code}) {
+
     }
 };

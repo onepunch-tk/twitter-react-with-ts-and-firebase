@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import styled from "styled-components";
 import {useForm, SubmitHandler} from "react-hook-form";
-import {signIn} from "configs/firebase";
+import {signIn, signUp} from "configs/firebase";
 import {useNavigate} from "react-router-dom";
 import {faApple, faGoogle, faTwitter} from "@fortawesome/free-brands-svg-icons";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {ContentsText, SocialBtn} from "../styleds/authStyled";
+import {ValidateResult} from "react-hook-form/dist/types/validator";
 
 const ModalBackground = styled.div`
   width: 100vw;
@@ -40,17 +41,17 @@ const AuthHeader = styled.div`
   }
 `;
 
-const SignInForm = styled.form`
+const AuthForm = styled.form`
 
 `;
 
-const SignIn = styled.div`
+const AuthFormWrapper = styled.div`
   display: flex;
   width: 300px;
   height: 100%;
   flex-direction: column;
   align-items: center;
-  
+
   span:first-child {
     align-self: start;
     margin: 30px 0;
@@ -61,9 +62,10 @@ const SignUp = styled.div`
 
 `;
 
-interface ISignInValues {
+interface IAuthValues {
     email: string;
     password: string;
+    confirmPassword?: string;
 }
 
 interface IAuthModalProps {
@@ -72,10 +74,10 @@ interface IAuthModalProps {
 
 function AuthModal({isSignUp}: IAuthModalProps) {
     const [isClickedSignUp, setIsClickedSignUp] = useState(isSignUp);
-    const {handleSubmit, register} = useForm<ISignInValues>();
+    const {handleSubmit, register, resetField, watch} = useForm<IAuthValues>();
     const navigate = useNavigate();
 
-    const signInHandle: SubmitHandler<ISignInValues> = async data => {
+    const signInHandle: SubmitHandler<IAuthValues> = async data => {
         const {email, password} = data;
         const success = await signIn(email, password);
 
@@ -83,14 +85,22 @@ function AuthModal({isSignUp}: IAuthModalProps) {
             //if signed in, redirect at home.
             navigate(-1);
         } else {
+            resetField("password");
             setIsClickedSignUp(true);
         }
+    };
+
+    const signUpHandle: SubmitHandler<IAuthValues> = async data => {
+        const {email, password, confirmPassword} = data;
+        if (password !== confirmPassword) {
+            return;
+        }
+        await signUp(email, password);
     };
 
     const closeHandle = () => {
         navigate(-1);
     };
-
     // const onSubmit: SubmitHandler<FormValues> = data => console.log(data);
     return (
         <ModalBackground>
@@ -100,39 +110,52 @@ function AuthModal({isSignUp}: IAuthModalProps) {
                     <FontAwesomeIcon color={"white"} fontSize={30} icon={faTwitter}/>
                     <div></div>
                 </AuthHeader>
+                <ContentsText fontSize={"26px"}>{isClickedSignUp ? "Create your account" : "트위터에 가입하기"}</ContentsText>
                 {
-                    isClickedSignUp ?
-                        <SignUp></SignUp> :
-                        <SignIn>
-                            <ContentsText fontSize={"26px"}>트위터에 로그인하기</ContentsText>
-                            <SocialBtn
-                                mgtop={"0px"}
-                                bg={"white"}
-                                fsize={"14px"}
-                                fweight={500}
-                                fcolor={"#3c4043"}>
-                                <FontAwesomeIcon color={"black"} fontSize={17} icon={faGoogle}/>
-                                <span>Google 계정으로 로그인하기</span>
-                            </SocialBtn>
-                            <SocialBtn
-                                mgtop={"15px"}
-                                bg={"white"}
-                                fsize={"16px"}
-                                fweight={700}
-                                fcolor={"#3c4043"}
-                            >
-                                <FontAwesomeIcon color={"black"} fontSize={21} icon={faApple}/>
-                                <span>Apple에서 로그하기</span>
-                            </SocialBtn>
-                            <SignInForm onSubmit={handleSubmit(signInHandle)}>
-                                <input type={"email"} {...register("email", {required: true})} />
-                                <input type={"password"} {...register("password", {required: true})}/>
-                                <input type={"submit"} value={"Sign In"}/>
-                            </SignInForm>
-                        </SignIn>
-
+                    <AuthFormWrapper>
+                        {
+                            !isClickedSignUp &&
+                            <>
+                                <SocialBtn
+                                    mgtop={"0px"}
+                                    bg={"white"}
+                                    fsize={"14px"}
+                                    fweight={500}
+                                    fcolor={"#3c4043"}>
+                                    <FontAwesomeIcon color={"black"} fontSize={17} icon={faGoogle}/>
+                                    <span>Google 계정으로 로그인하기</span>
+                                </SocialBtn>
+                                <SocialBtn
+                                    mgtop={"15px"}
+                                    bg={"white"}
+                                    fsize={"16px"}
+                                    fweight={700}
+                                    fcolor={"#3c4043"}
+                                >
+                                    <FontAwesomeIcon color={"black"} fontSize={21} icon={faApple}/>
+                                    <span>Apple에서 로그하기</span>
+                                </SocialBtn>
+                            </>
+                        }
+                        <AuthForm onSubmit={handleSubmit(isClickedSignUp ? signUpHandle : signInHandle)}>
+                            <input type={"email"} {...register("email", {required: true})} />
+                            <input type={"password"} {...register("password", {required: true})}/>
+                            {
+                                isClickedSignUp &&
+                                <input
+                                    type={"password"}
+                                    {
+                                        ...register("confirmPassword", {
+                                            required: true,
+                                            // Validate<TFieldValue> = (value: TFieldValue) => ValidateResult | Promise<ValidateResult>;
+                                        })
+                                    }
+                                />
+                            }
+                            <input type={"submit"} value={isClickedSignUp ? "Sign Up" : "Sign In"}/>
+                        </AuthForm>
+                    </AuthFormWrapper>
                 }
-
             </AuthWrapper>
         </ModalBackground>
 
